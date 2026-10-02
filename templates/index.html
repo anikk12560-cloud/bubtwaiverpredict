@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>BUBT Waiver Predictor</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+
+        body {
+
+            font-family: Arial, sans-serif;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #eef2ff,
+                    #f8fafc
+                );
+
+            min-height: 100vh;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            padding: 30px;
+        }
+
+
+        .container {
+
+            width: 100%;
+
+            max-width: 550px;
+
+            background: white;
+
+            padding: 35px;
+
+            border-radius: 18px;
+
+            box-shadow:
+                0 15px 40px
+                rgba(0, 0, 0, 0.12);
+        }
+
+
+        .header {
+
+            text-align: center;
+
+            margin-bottom: 30px;
+        }
+
+
+        .header h1 {
+
+            font-size: 28px;
+
+            color: #1e293b;
+
+            margin-bottom: 8px;
+        }
+
+
+        .header p {
+
+            color: #64748b;
+
+            font-size: 14px;
+        }
+
+
+        .form-group {
+
+            margin-bottom: 18px;
+        }
+
+
+        label {
+
+            display: block;
+
+            margin-bottom: 7px;
+
+            font-weight: bold;
+
+            color: #334155;
+
+            font-size: 14px;
+        }
+
+
+        input,
+        select {
+
+            width: 100%;
+
+            padding: 12px 14px;
+
+            border: 1px solid #cbd5e1;
+
+            border-radius: 9px;
+
+            font-size: 15px;
+
+            outline: none;
+        }
+
+
+        input:focus,
+        select:focus {
+
+            border-color: #4f46e5;
+        }
+
+
+        button {
+
+            width: 100%;
+
+            padding: 14px;
+
+            border: none;
+
+            border-radius: 9px;
+
+            background: #4f46e5;
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            margin-top: 10px;
+        }
+
+
+        button:hover {
+
+            background: #4338ca;
+        }
+
+
+        .hidden {
+
+            display: none;
+        }
+
+
+        #loading {
+
+            text-align: center;
+
+            margin-top: 20px;
+
+            color: #4f46e5;
+
+            display: none;
+        }
+
+
+        .result {
+
+            margin-top: 25px;
+
+            padding: 22px;
+
+            border-radius: 12px;
+
+            background: #f8fafc;
+
+            display: none;
+        }
+
+
+        .result h2 {
+
+            text-align: center;
+
+            margin-bottom: 18px;
+
+            color: #1e293b;
+        }
+
+
+        .result-row {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            padding: 10px 0;
+
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+
+        .result-row:last-child {
+
+            border-bottom: none;
+        }
+
+
+        .result-label {
+
+            color: #64748b;
+        }
+
+
+        .result-value {
+
+            font-weight: bold;
+
+            color: #1e293b;
+        }
+
+
+        .waiver {
+
+            color: #16a34a;
+
+            font-size: 22px;
+        }
+
+
+        .error {
+
+            margin-top: 20px;
+
+            padding: 12px;
+
+            border-radius: 8px;
+
+            background: #fee2e2;
+
+            color: #b91c1c;
+
+            display: none;
+
+            text-align: center;
+        }
+
+
+        .note {
+
+            margin-top: 20px;
+
+            font-size: 12px;
+
+            color: #64748b;
+
+            text-align: center;
+
+            line-height: 1.5;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <div class="header">
+
+        <h1>BUBT Waiver Predictor</h1>
+
+        <p>
+            Machine Learning Based Tuition Fee Waiver Prediction
+        </p>
+
+    </div>
+
+
+    <!-- Semester -->
+
+    <div class="form-group">
+
+        <label for="semester">
+            Select Semester
+        </label>
+
+        <select id="semester">
+
+            <option value="">
+                Select Semester
+            </option>
+
+            <option value="1">
+                1st Semester
+            </option>
+
+            <option value="2">
+                2nd Semester
+            </option>
+
+            <option value="3">
+                3rd Semester
+            </option>
+
+            <option value="4">
+                4th Semester
+            </option>
+
+            <option value="5">
+                5th Semester
+            </option>
+
+            <option value="6">
+                6th Semester
+            </option>
+
+            <option value="7">
+                7th Semester
+            </option>
+
+            <option value="8">
+                8th Semester
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <!-- FIRST SEMESTER -->
+
+    <div id="firstSemester">
+
+
+        <div class="form-group">
+
+            <label for="ssc">
+                SSC GPA
+            </label>
+
+            <input
+                type="number"
+                id="ssc"
+                step="0.01"
+                min="0"
+                max="5"
+                placeholder="Example: 4.80"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="hsc">
+                HSC GPA
+            </label>
+
+            <input
+                type="number"
+                id="hsc"
+                step="0.01"
+                min="0"
+                max="5"
+                placeholder="Example: 4.70"
+            >
+
+        </div>
+
+    </div>
+
+
+    <!-- CONTINUING STUDENT -->
+
+    <div id="continuingSemester"
+         class="hidden">
+
+
+        <div class="form-group">
+
+            <label for="sgpa">
+                SGPA
+            </label>
+
+            <input
+                type="number"
+                id="sgpa"
+                step="0.01"
+                min="0"
+                max="4"
+                placeholder="Example: 3.80"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="cgpa">
+                CGPA
+            </label>
+
+            <input
+                type="number"
+                id="cgpa"
+                step="0.01"
+                min="0"
+                max="4"
+                placeholder="Example: 3.75"
+            >
+
+        </div>
+
+    </div>
+
+
+    <!-- TUITION -->
+
+    <div class="form-group">
+
+        <label for="tuition">
+            Tuition Fee (৳)
+        </label>
+
+        <input
+            type="number"
+            id="tuition"
+            min="0"
+            placeholder="Example: 60000"
+        >
+
+    </div>
+
+
+    <!-- BUTTON -->
+
+    <button
+        onclick="predictWaiver()">
+
+        Predict Waiver
+
+    </button>
+
+
+    <!-- LOADING -->
+
+    <div id="loading">
+
+        Predicting...
+
+    </div>
+
+
+    <!-- ERROR -->
+
+    <div id="error"
+         class="error">
+
+    </div>
+
+
+    <!-- RESULT -->
+
+    <div id="result"
+         class="result">
+
+
+        <h2>
+            Prediction Result
+        </h2>
+
+
+        <div class="result-row">
+
+            <span class="result-label">
+                Semester
+            </span>
+
+            <span
+                class="result-value"
+                id="resultSemester">
+
+            </span>
+
+        </div>
+
+
+        <div class="result-row">
+
+            <span class="result-label">
+                Predicted Waiver
+            </span>
+
+            <span
+                class="result-value waiver"
+                id="resultWaiver">
+
+            </span>
+
+        </div>
+
+
+        <div class="result-row">
+
+            <span class="result-label">
+                Tuition Fee
+            </span>
+
+            <span
+                class="result-value"
+                id="resultTuition">
+
+            </span>
+
+        </div>
+
+
+        <div class="result-row">
+
+            <span class="result-label">
+                Estimated Waiver Amount
+            </span>
+
+            <span
+                class="result-value"
+                id="resultWaiverAmount">
+
+            </span>
+
+        </div>
+
+
+        <div class="result-row">
+
+            <span class="result-label">
+                Remaining Tuition
+            </span>
+
+            <span
+                class="result-value"
+                id="resultRemaining">
+
+            </span>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="note">
+
+        This is an ML-based estimation for educational/
+        portfolio purposes and is not an official BUBT
+        waiver calculator.
+
+    </div>
+
+
+</div>
+
+
+<script>
+
+
+    // -----------------------------------------
+    // 1. CHANGE INPUTS BASED ON SEMESTER
+    // -----------------------------------------
+
+    document
+        .getElementById("semester")
+        .addEventListener(
+            "change",
+            function () {
+
+                const semester =
+                    this.value;
+
+
+                const firstSemester =
+                    document.getElementById(
+                        "firstSemester"
+                    );
+
+
+                const continuingSemester =
+                    document.getElementById(
+                        "continuingSemester"
+                    );
+
+
+                if (semester === "1") {
+
+                    firstSemester
+                        .classList
+                        .remove("hidden");
+
+                    continuingSemester
+                        .classList
+                        .add("hidden");
+
+                }
+
+                else if (semester !== "") {
+
+                    firstSemester
+                        .classList
+                        .add("hidden");
+
+                    continuingSemester
+                        .classList
+                        .remove("hidden");
+
+                }
+
+                else {
+
+                    firstSemester
+                        .classList
+                        .add("hidden");
+
+                    continuingSemester
+                        .classList
+                        .add("hidden");
+
+                }
+
+            }
+        );
+
+
+    // -----------------------------------------
+    // 2. PREDICTION FUNCTION
+    // -----------------------------------------
+
+    async function predictWaiver() {
+
+
+        const semester =
+            document.getElementById(
+                "semester"
+            ).value;
+
+
+        const tuition =
+            document.getElementById(
+                "tuition"
+            ).value;
+
+
+        const errorBox =
+            document.getElementById(
+                "error"
+            );
+
+
+        const resultBox =
+            document.getElementById(
+                "result"
+            );
+
+
+        const loading =
+            document.getElementById(
+                "loading"
+            );
+
+
+        // Clear previous result
+
+        errorBox.style.display =
+            "none";
+
+        resultBox.style.display =
+            "none";
+
+
+        // ---------------------------------
+        // VALIDATION
+        // ---------------------------------
+
+        if (!semester) {
+
+            showError(
+                "Please select a semester."
+            );
+
+            return;
+
+        }
+
+
+        if (!tuition || tuition <= 0) {
+
+            showError(
+                "Please enter a valid tuition fee."
+            );
+
+            return;
+
+        }
+
+
+        let data;
+
+
+        // ---------------------------------
+        // FIRST SEMESTER
+        // ---------------------------------
+
+        if (semester === "1") {
+
+
+            const ssc =
+                document.getElementById(
+                    "ssc"
+                ).value;
+
+
+            const hsc =
+                document.getElementById(
+                    "hsc"
+                ).value;
+
+
+            if (!ssc || !hsc) {
+
+                showError(
+                    "Please enter SSC and HSC GPA."
+                );
+
+                return;
+
+            }
+
+
+            data = {
+
+                semester:
+                    Number(semester),
+
+                ssc_gpa:
+                    Number(ssc),
+
+                hsc_gpa:
+                    Number(hsc),
+
+                sgpa:
+                    0,
+
+                cgpa:
+                    0,
+
+                tuition_fee:
+                    Number(tuition)
+
+            };
+
+        }
+
+
+        // ---------------------------------
+        // CONTINUING STUDENT
+        // ---------------------------------
+
+        else {
+
+
+            const sgpa =
+                document.getElementById(
+                    "sgpa"
+                ).value;
+
+
+            const cgpa =
+                document.getElementById(
+                    "cgpa"
+                ).value;
+
+
+            if (!sgpa || !cgpa) {
+
+                showError(
+                    "Please enter SGPA and CGPA."
+                );
+
+                return;
+
+            }
+
+
+            data = {
+
+                semester:
+                    Number(semester),
+
+                ssc_gpa:
+                    0,
+
+                hsc_gpa:
+                    0,
+
+                sgpa:
+                    Number(sgpa),
+
+                cgpa:
+                    Number(cgpa),
+
+                tuition_fee:
+                    Number(tuition)
+
+            };
+
+        }
+
+
+        // ---------------------------------
+        // SHOW LOADING
+        // ---------------------------------
+
+        loading.style.display =
+            "block";
+
+
+        try {
+
+
+            // ---------------------------------
+            // SEND DATA TO FLASK
+            // ---------------------------------
+
+            const response =
+                await fetch(
+                    "http://127.0.0.1:5000/predict",
+                    {
+
+                        method: "POST",
+
+                        headers: {
+
+                            "Content-Type":
+                                "application/json"
+
+                        },
+
+                        body:
+                            JSON.stringify(data)
+
+                    }
+                );
+
+
+            const result =
+                await response.json();
+
+
+            loading.style.display =
+                "none";
+
+
+            // ---------------------------------
+            // CHECK API ERROR
+            // ---------------------------------
+
+            if (!response.ok ||
+                result.status === "error") {
+
+                showError(
+                    result.message ||
+                    "Prediction failed."
+                );
+
+                return;
+
+            }
+
+
+            // ---------------------------------
+            // SHOW RESULT
+            // ---------------------------------
+
+            document.getElementById(
+                "resultSemester"
+            ).textContent =
+                result.semester;
+
+
+            document.getElementById(
+                "resultWaiver"
+            ).textContent =
+                result.predicted_waiver_percent
+                + "%";
+
+
+            document.getElementById(
+                "resultTuition"
+            ).textContent =
+                "৳ " +
+                result.tuition_fee;
+
+
+            document.getElementById(
+                "resultWaiverAmount"
+            ).textContent =
+                "৳ " +
+                result.estimated_waiver_amount;
+
+
+            document.getElementById(
+                "resultRemaining"
+            ).textContent =
+                "৳ " +
+                result.estimated_remaining_fee;
+
+
+            resultBox.style.display =
+                "block";
+
+
+        }
+
+        catch (error) {
+
+
+            loading.style.display =
+                "none";
+
+
+            showError(
+                "Cannot connect to Flask API. Make sure Flask server is running on port 5000."
+            );
+
+        }
+
+    }
+
+
+    // -----------------------------------------
+    // 3. ERROR FUNCTION
+    // -----------------------------------------
+
+    function showError(message) {
+
+        const errorBox =
+            document.getElementById(
+                "error"
+            );
+
+
+        errorBox.textContent =
+            message;
+
+
+        errorBox.style.display =
+            "block";
+
+    }
+
+
+</script>
+
+
+</body>
+
+</html>
